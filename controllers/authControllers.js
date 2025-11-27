@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
     try {
@@ -13,7 +14,7 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ message: "Email already in use" });
 
         const hashed = await bcrypt.hash(password, 10);
-        const user_pic=req.file ? req.file.path :null;
+        const user_pic = req.file ? req.file.filename : null;
 
         const { insertId } = await User.createUser({
             name,
@@ -47,8 +48,23 @@ const loginUser = async (req, res) => {
         if (!isMatch)
             return res.status(401).json({ message: "Invalid password" });
 
-        res.status(200).json({ user });
+        const token = jwt.sign({ id: user.id, email: user.email }, "secret123", {
+            expiresIn: "7d",
+        });
 
+        res.status(200).json({
+            message: "Login successful",
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                mobile: user.mobile,
+                user_pic: user.user_pic ?? null,
+            }
+        });
+
+        console.log("Login Request Body:", req.body);
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ message: "Server error" });
