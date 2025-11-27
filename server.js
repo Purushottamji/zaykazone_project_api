@@ -306,7 +306,14 @@ app.delete("/food/:food_id", async (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`server running on port ${PORT}`);
-});
+
+
+
+const PORT=process.env.PORT || 3000;
+app.listen(PORT,(err)=>{
+    if(err) return console.error("server error :"+err.message);
+    console.log(`server running on port ${PORT}`);
+
+
+})
+
