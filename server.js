@@ -5,12 +5,7 @@ const userRoutes=require("./routes/userRoutes");
 const addressRoutes= require("./routes/addRoutes");
 const otpRoutes=require("./routes/otpRoutes");
 const phoneOtpRoutes=require("./routes/phoneOtp");
-const express = require ("express");
-const dotenv = require("dotenv");
 const database = require("./db");
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
-const addressRoutes = require("./routes/addRoutes");
 const multer = require("multer");
 
 dotenv.config();
@@ -37,15 +32,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-
-app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
-app.use("/address", addressRoutes);
-
-
-
-
 
 app.get("/restaurant", async (req, res) => {
   try {
