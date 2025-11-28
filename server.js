@@ -25,10 +25,6 @@ app.use("/otp",otpRoutes);
 
 
 
-
-
-
-
 app.get("/restaurant", async (req, res) => {
   try {
     const viewQuery = "SELECT * FROM restaurant_details";
@@ -41,9 +37,6 @@ app.get("/restaurant", async (req, res) => {
     });
   }
 });
-
-
-
 
 
 app.post("/restaurant", upload.single("image"), async (req, res) => {
