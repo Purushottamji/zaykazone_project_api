@@ -1,22 +1,37 @@
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
-// Storage
+// Render Persistent Disk path
+const uploadPath = path.join("/var/data/uploads/user_pic");
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
+
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/user_pics");
-    },
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        cb(null, Date.now() + "_" + Math.random().toString(36).substring(2) + ext);
-    }
+  destination: (req, file, cb) => {
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "_" + file.originalname;
+    cb(null, uniqueName);
+  },
 });
 
-// File filter
 const fileFilter = (req, file, cb) => {
-    const allowed = ["image/jpeg", "image/png", "image/jpg"];
-    if (allowed.includes(file.mimetype)) cb(null, true);
-    else cb(new Error("Invalid file type"), false);
+  const allowed = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+  if (allowed.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only images are allowed"), false);
+  }
 };
 
-module.exports = multer({ storage, fileFilter });
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+module.exports = { upload };
