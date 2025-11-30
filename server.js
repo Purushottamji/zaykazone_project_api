@@ -137,6 +137,7 @@ app.delete("/restaurant/:res_id", async (req, res) => {
 
 
 
+
 app.get("/food", async (req, res) => {
   try {
     const viewQuery = "SELECT * FROM food_details";
@@ -149,8 +150,6 @@ app.get("/food", async (req, res) => {
     });
   }
 });
-
-
 
 
 app.post("/food", upload.single("image"), async (req, res) => {
@@ -196,10 +195,40 @@ app.post("/food", upload.single("image"), async (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-    const [result] = await database.query(insertQuery, [
+        const [result] = await database.query(insertQuery, [
+            name,
+            restaurant_name,
+            image,          
+            rating,
+            delivery_type,
+            time,
+            description,
+            sizes,
+            ingredients,
+            price,
+            quantity,
+            restaurant_id
+        ]);
+
+        res.status(201).json({
+            message: "Food details added successfully",
+            insertId: result.insertId,
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Database inserting error: " + error
+        });
+    }
+});
+
+app.put("/food/:food_id", upload.single("image"), async (req, res) => {
+  try {
+    const foodId = req.params.food_id;
+    const {
       name,
       restaurant_name,
-      image,          
+      image,
       rating,
       delivery_type,
       time,
@@ -209,65 +238,30 @@ app.post("/food", upload.single("image"), async (req, res) => {
       price,
       quantity,
       restaurant_id
-    ]);
-
-    res.status(201).json({
-      message: "Food details added successfully",
-      insertId: result.insertId,
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      message: "Database inserting error: " + error
-    });
-}
-});
-
-
-
-
-
-
-app.put("/food/:food_id", upload.single("image"), async (req, res) => {
-  try {
-    const foodId = req.params.food_id;
-    const {
-      name,
-      details,
-      prize,
-      rate,
-      size,
-      quantity,
-      ingridents,
-      delivery_charge,
-      delivery_time,
-      user_id,
-      restaurant_id,
     } = req.body;
 
     const image_url = req.file ? req.file.filename : req.body.image_url;
 
     const updateQuery = `
       UPDATE food_details SET 
-      name=?, image_url=?, details=?, prize=?, rate=?, size=?, quantity=?, ingridents=?, 
-      delivery_charge=?, delivery_time=?, user_id=?, restaurant_id=?
+      name=?, restaurant_name=?, image=?, rating=?, delivery_type=?, time=?, description=?, sizes=?, 
+      ingredients=?, price=?, quantity=?, restaurant_id=?
       WHERE food_id = ?
     `;
 
     const [result] = await database.query(updateQuery, [
       name,
-      image_url,
-      details,
-      prize,
-      rate,
-      size,
+      restaurant_name,
+      image,
+      rating,
+      delivery_type,
+      time,
+      description,
+      sizes,
+      ingredients,
+      price,
       quantity,
-      ingridents,
-      delivery_charge,
-      delivery_time,
-      user_id,
       restaurant_id,
-      foodId,
     ]);
 
     if (result.affectedRows === 0) {
