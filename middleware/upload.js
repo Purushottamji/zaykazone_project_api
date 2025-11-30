@@ -2,8 +2,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Render Persistent Disk path
-const uploadPath = path.join("/var/data/uploads/user_pic");
+const uploadPath = path.join(__dirname, "..", "uploads", "user_pic");
 
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
