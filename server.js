@@ -78,18 +78,17 @@ app.post("/restaurant", upload.single("image_url"), async (req, res) => {
 app.put("/restaurant/:res_id", upload.single("image_url"), async (req, res) => {
   try {
     const restaurantId = req.params.res_id;
-    const { name, description, food_details, address } = req.body;
+    const { name, description, food_details, address, rating, delivery_charge, delivery_time } = req.body;
+
     const image_url = req.file ? req.file.filename : req.body.image_url;
 
-    if (!name || !description || !food_details || !address) {
-      return res.status(400).json({
-        message: "All fields are required",
-      });
+    if (!name || !description || !food_details || !address || !rating || !delivery_charge || !delivery_time) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const updateQuery = `
-      UPDATE restaurant_details 
-      SET name=?, image_url=?, description=?, food_details=?, address=? 
+      UPDATE restaurant_details SET
+      name=?, image_url=?, description=?, food_details=?, address=?, rating=?, delivery_charge=?, delivery_time=?
       WHERE res_id = ?
     `;
 
@@ -99,18 +98,43 @@ app.put("/restaurant/:res_id", upload.single("image_url"), async (req, res) => {
       description,
       food_details,
       address,
+      rating,
+      delivery_charge,
+      delivery_time,
       restaurantId,
     ]);
+
+    if (result.affectedRows === 0) return res.status(404).json({ message: "Restaurant not found" });
+
+    res.status(200).json({ message: "Restaurant updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Database update error: " + error });
+  }
+});
+
+app.patch("/restaurant/:res_id", upload.single("image_url"), async (req, res) => {
+  try {
+    const restaurantId = req.params.res_id;
+    const updates = req.body;
+
+    if (req.file) updates.image_url = req.file.filename;
+
+    const fields = Object.keys(updates).map(field => `${field}=?`).join(", ");
+    const values = Object.values(updates);
+
+    const updateQuery = `UPDATE restaurant_details SET ${fields} WHERE res_id = ?`;
+
+    const [result] = await database.query(updateQuery, [...values, restaurantId]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Restaurant not found" });
     }
 
-    res.status(200).json({ message: "Restaurant updated successfully" });
+    res.status(200).json({ message: "Restaurant partially updated successfully" });
+
   } catch (error) {
-    res.status(500).json({
-      message: "Database update error: " + error,
-    });
+    res.status(500).json({ message: "Database patch error: " + error });
   }
 });
 
@@ -132,10 +156,6 @@ app.delete("/restaurant/:res_id", async (req, res) => {
     });
   }
 });
-
-
-
-
 
 
 
@@ -169,67 +189,38 @@ app.post("/food", upload.single("image"), async (req, res) => {
       restaurant_id,
     } = req.body;
 
-    const image = req.file ? req.file.filename : null;  
-   
-    if (
-      !name ||
-      !restaurant_name ||
-      !rating ||
-      !delivery_type ||
-      !time ||
-      !description ||
-      !sizes ||
-      !ingredients ||
-      !price ||
-      !quantity ||
-      !restaurant_id ||
-      !image
-    ) {
-      return res.status(400).json({
-        message: "All fields are required including image",
-      });
+    const image = req.file ? req.file.filename : null;
+
+    if (!name || !restaurant_name || !rating || !delivery_type || !time || !description || !sizes ||
+        !ingredients || !price || !quantity || !restaurant_id || !image) {
+      return res.status(400).json({ message: "All fields are required including image" });
     }
 
     const insertQuery = `
-            INSERT INTO food_details 
-            (name, restaurant_name, image, rating, delivery_type, time, description, sizes, ingredients, price, quantity, restaurant_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
+      INSERT INTO food_details
+      (name, restaurant_name, image, rating, delivery_type, time, description, sizes, ingredients, price, quantity, restaurant_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
-        const [result] = await database.query(insertQuery, [
-            name,
-            restaurant_name,
-            image,          
-            rating,
-            delivery_type,
-            time,
-            description,
-            sizes,
-            ingredients,
-            price,
-            quantity,
-            restaurant_id
-        ]);
+    const [result] = await database.query(insertQuery, [
+      name, restaurant_name, image, rating, delivery_type, time, description,
+      sizes, ingredients, price, quantity, restaurant_id
+    ]);
 
-        res.status(201).json({
-            message: "Food details added successfully",
-            insertId: result.insertId,
-        });
+    res.status(201).json({ message: "Food added successfully", insertId: result.insertId });
 
-    } catch (error) {
-        res.status(500).json({
-            message: "Database inserting error: " + error
-        });
-    }
+  } catch (error) {
+    res.status(500).json({ message: "Database insert error: " + error });
+  }
 });
 
 app.put("/food/:food_id", upload.single("image"), async (req, res) => {
   try {
     const foodId = req.params.food_id;
+
     const {
       name,
       restaurant_name,
-      image,
       rating,
       delivery_type,
       time,
@@ -241,41 +232,54 @@ app.put("/food/:food_id", upload.single("image"), async (req, res) => {
       restaurant_id
     } = req.body;
 
-    const image_url = req.file ? req.file.filename : req.body.image_url;
+    const image = req.file ? req.file.filename : req.body.image;
 
     const updateQuery = `
       UPDATE food_details SET 
       name=?, restaurant_name=?, image=?, rating=?, delivery_type=?, time=?, description=?, sizes=?, 
-      ingredients=?, price=?, quantity=?, restaurant_id=?
+      ingredients=?, price=?, quantity=?, restaurant_id=? 
       WHERE food_id = ?
     `;
 
     const [result] = await database.query(updateQuery, [
-      name,
-      restaurant_name,
-      image,
-      rating,
-      delivery_type,
-      time,
-      description,
-      sizes,
-      ingredients,
-      price,
-      quantity,
-      restaurant_id,
+      name, restaurant_name, image, rating, delivery_type, time, description,
+      sizes, ingredients, price, quantity, restaurant_id, foodId
     ]);
+
+    if (result.affectedRows === 0) return res.status(404).json({ message: "Food not found" });
+
+    res.status(200).json({ message: "Food updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Database update error: " + error });
+  }
+});
+
+app.patch("/food/:food_id", upload.single("image"), async (req, res) => {
+  try {
+    const foodId = req.params.food_id;
+    const updates = req.body;
+
+    if (req.file) updates.image = req.file.filename;
+
+    const fields = Object.keys(updates).map(f => `${f}=?`).join(", ");
+    const values = Object.values(updates);
+
+    const updateQuery = `UPDATE food_details SET ${fields} WHERE food_id = ?`;
+
+    const [result] = await database.query(updateQuery, [...values, foodId]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Food not found" });
     }
 
-    res.status(200).json({ message: "Food details updated successfully" });
+    res.status(200).json({ message: "Food partially updated successfully" });
+
   } catch (error) {
-    res.status(500).json({
-      message: "Database update error: " + error,
-    });
+    res.status(500).json({ message: "Database patch error: " + error });
   }
 });
+
 
 app.delete("/food/:food_id", async (req, res) => {
   try {
