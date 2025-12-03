@@ -30,7 +30,7 @@ const patchUser= async (data) => {
     const user_pic = data.user_pic ?? null;
 
     const [result] = await database.execute(
-        `UPDATE users SET name=?, email=?, mobile=?, user_pic=? WHERE id=?`,
+        `UPDATE user_info SET name=?, email=?, mobile=?, user_pic=? WHERE id=?`,
         [name, email, mobile, user_pic, data.id]
     );
 
