@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRoutes);
 app.use("/phone", phoneOtpRoutes);
 app.use("/users", userRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static("uploads"));
 app.use("/address", addressRoutes);
 app.use("/otp", otpRoutes);
 
