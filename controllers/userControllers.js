@@ -77,72 +77,43 @@ const updateUser = async (req, res) => {
     }
 };
 
-const patchUser = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const { name, email, mobile, password } = req.body;
+const patchUser = async (data) => {
+    const fields = [];
+    const values = [];
 
-        const existingUser = await User.findUserById(id);
-        if (!existingUser) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        let updatedData = { id };
-
-        if (name) updatedData.name = name;
-
-        if (email) {
-            const emailExists = await User.findUserByEmail(email);
-            if (emailExists && emailExists.id != id) {
-                return res.status(400).json({ message: "Email already taken" });
-            }
-            updatedData.email = email;
-        }
-
-        if (mobile) {
-            const mobileExists = await User.findUserByMobile(mobile);
-            if (mobileExists && mobileExists.id != id) {
-                return res.status(400).json({ message: "Mobile already taken" });
-            }
-            updatedData.mobile = mobile;
-        }
-
-        if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            updatedData.password = hashedPassword;
-        }
-
-        if (req.file) {
-            updatedData.user_pic = req.file.filename;
-        }
-
-        if (Object.keys(updatedData).length === 1) {
-            return res.status(400).json({ message: "No data to update" });
-        }
-
-        const ok = await User.updateUser(updatedData);
-        if (!ok) {
-            return res.status(400).json({ message: "Update failed" });
-        }
-
-        const updatedUser = await User.findUserById(id);
-
-        res.status(200).json({
-            message: "User updated successfully",
-            updatedFields: updatedData,
-            user: updatedUser
-        });
-
-    } catch (err) {
-        console.error("Patch error:", err);
-        res.status(500).json({ message: "Server error" });
+    if (data.name !== undefined) {
+        fields.push("name = ?");
+        values.push(data.name);
     }
+
+    if (data.email !== undefined) {
+        fields.push("email = ?");
+        values.push(data.email);
+    }
+
+    if (data.mobile !== undefined) {
+        fields.push("mobile = ?");
+        values.push(data.mobile);
+    }
+
+    if (data.password !== undefined) {
+        fields.push("password = ?");
+        values.push(data.password);
+    }
+
+    if (data.user_pic !== undefined) {
+        fields.push("user_pic = ?");
+        values.push(data.user_pic);
+    }
+
+    // Add WHERE id
+    values.push(data.id);
+
+    const sql = `UPDATE users SET ${fields.join(", ")} WHERE id = ?`;
+    const [result] = await pool.execute(sql, values);
+
+    return result.affectedRows > 0;
 };
-
-
-
-
-
 
 
 module.exports = { getAllUsers ,updateUser,patchUser};
