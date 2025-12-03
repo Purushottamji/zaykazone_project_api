@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/", getAllUsers);
 router.patch("/update/:id", upload.single("user_pic"), updateUser);
 router.put("/update/:id", upload.single("user_pic"), updateUser);
+router.patch("/update/:id", upload.single("user_pic"), patchUser);
 
 
 module.exports = router;

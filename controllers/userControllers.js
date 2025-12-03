@@ -104,4 +104,4 @@ const patchUser= async (req,res) =>{
 }
 
 
-module.exports = { getAllUsers ,updateUser,patchUser};
+module.exports = { getAllUsers ,updateUser, patchUser};

@@ -137,7 +137,31 @@ app.patch("/restaurant/:res_id", upload.single("image_url"), async (req, res) =>
     res.status(500).json({ message: "Database patch error: " + error });
   }
 });
+// app.patch("/users/update/:id",upload.single("user_pic"),async (req,res) =>{
+//    try {
+//     const id = req.params.id;
+//     const updates = req.body;
 
+//     if (req.file) updates.image_url = req.file.filename;
+
+//     const fields = Object.keys(updates).map(field => `${field}=?`).join(", ");
+//     const values = Object.values(updates);
+
+//     const updateQuery = `UPDATE user_info SET ${fields} WHERE id = ?`;
+
+//     const [result] = await database.query(updateQuery, [...values, id]);
+
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     res.status(200).json({ message: "User partially updated successfully" });
+
+//   } catch (error) {
+//     res.status(500).json({ message: "Database patch error: " + error });
+//   }
+// }
+// )
 app.delete("/restaurant/:res_id", async (req, res) => {
   try {
     const restaurantId = req.params.res_id;
