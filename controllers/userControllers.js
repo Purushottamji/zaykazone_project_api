@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const database=require("../db");
 
 const getAllUsers = async (req, res) => {
     try {
@@ -77,43 +78,30 @@ const updateUser = async (req, res) => {
     }
 };
 
-const patchUser = async (data) => {
-    const fields = [];
-    const values = [];
+const patchUser= async (req,res) =>{
+   try {
+    const id = req.params.id;
+    const updates = req.body;
 
-    if (data.name !== undefined) {
-        fields.push("name = ?");
-        values.push(data.name);
+    if (req.file) updates.image_url = req.file.filename;
+
+    const fields = Object.keys(updates).map(field => `${field}=?`).join(", ");
+    const values = Object.values(updates);
+
+    const updateQuery = `UPDATE user_info SET ${fields} WHERE id = ?`;
+
+    const [result] = await database.query(updateQuery, [...values, restaurantId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if (data.email !== undefined) {
-        fields.push("email = ?");
-        values.push(data.email);
-    }
+    res.status(200).json({ message: "User partially updated successfully" });
 
-    if (data.mobile !== undefined) {
-        fields.push("mobile = ?");
-        values.push(data.mobile);
-    }
-
-    if (data.password !== undefined) {
-        fields.push("password = ?");
-        values.push(data.password);
-    }
-
-    if (data.user_pic !== undefined) {
-        fields.push("user_pic = ?");
-        values.push(data.user_pic);
-    }
-
-    // Add WHERE id
-    values.push(data.id);
-
-    const sql = `UPDATE users SET ${fields.join(", ")} WHERE id = ?`;
-    const [result] = await pool.execute(sql, values);
-
-    return result.affectedRows > 0;
-};
+  } catch (error) {
+    res.status(500).json({ message: "Database patch error: " + error });
+  }
+}
 
 
 module.exports = { getAllUsers ,updateUser,patchUser};
