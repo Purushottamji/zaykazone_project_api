@@ -201,8 +201,9 @@ app.post("/food", upload.single("image"), async (req, res) => {
       (name, restaurant_name, image, rating, delivery_type, time, description, sizes, ingredients, price, quantity, restaurant_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
+        const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await database.query(insertQuery, [
-      name, restaurant_name, image, rating, delivery_type, time, description,
+      name, restaurant_name, url+image, rating, delivery_type, time, description,
       sizes, ingredients, price, quantity, restaurant_id
     ]);
 
@@ -239,8 +240,9 @@ app.put("/food/:id", upload.single("image"), async (req, res) => {
       ingredients=?, price=?, quantity=?, restaurant_id=? 
       WHERE id = ?
     `;
+        const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await database.query(updateQuery, [
-      name, restaurant_name, image, rating, delivery_type, time, description,
+      name, restaurant_name, url+image, rating, delivery_type, time, description,
       sizes, ingredients, price, quantity, restaurant_id, id
     ]);
 
