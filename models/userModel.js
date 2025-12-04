@@ -11,12 +11,13 @@ const updateUser = async ({ id, name, email, mobile, password, user_pic }) => {
         SET name = ?, email = ?, mobile = ?, password = ?, user_pic = ?
         WHERE id = ?
     `;
+    const url="https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await db.execute(sql, [
         name,
         email,
         mobile,
         password,
-        user_pic,
+        url+user_pic,
         id
     ]);
 
