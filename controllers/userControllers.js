@@ -126,6 +126,28 @@ const patchUser = async (req, res) => {
     }
 };
 
+const deleteUser=async (req,res)=>{
+    try{
+       const {id}=req.params;
+
+        const existingUser = await User.findUserById(id);
+        if (!existingUser)
+            return res.status(404).json({ message: "User not found" });
+
+        const result= await User.deleteUser({id});
+         if (!result)
+            return res.status(400).json({ message: "Delete failed" });
+
+         res.status(200).json({
+            message: "User data delete successfully",
+        });
+
+    }catch(err){
+        console.error("Delete error :" , err);
+        res.status(500).json({ message: "Server error: " + err });
+    }
+}
 
 
-module.exports = { getAllUsers ,updateUser, patchUser};
+
+module.exports = { getAllUsers ,updateUser, patchUser,deleteUser};
