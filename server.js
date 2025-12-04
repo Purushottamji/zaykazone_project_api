@@ -37,6 +37,24 @@ app.get("/restaurant", async (req, res) => {
   }
 });
 
+//only for image add
+app.post("/post/image", upload.single("image"), async (req, res) => {
+  try {
+    const image = req.file ? req.file.filename : null;
+    const sql = `INSERT INTO allimage(image) VALUE (?)`;
+    const [result] = await db.query(sql, [image]);
+    res.status(201).json({
+      message: "Restaurant added successfully",
+      insertId: result.insertId,
+    });
+  } catch (err) {
+    console.error("post image failed:"+err);
+  res.status(500).json({
+      message: "Server error",
+    });
+  }
+})
+//end
 app.post("/restaurant", upload.single("image_url"), async (req, res) => {
   try {
     const { name, description, food_details, address, rating, delivery_charge, delivery_time } = req.body;
@@ -201,9 +219,8 @@ app.post("/food", upload.single("image"), async (req, res) => {
       (name, restaurant_name, image, rating, delivery_type, time, description, sizes, ingredients, price, quantity, restaurant_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-        const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await database.query(insertQuery, [
-      name, restaurant_name, url+image, rating, delivery_type, time, description,
+      name, restaurant_name, image, rating, delivery_type, time, description,
       sizes, ingredients, price, quantity, restaurant_id
     ]);
 
@@ -240,9 +257,8 @@ app.put("/food/:id", upload.single("image"), async (req, res) => {
       ingredients=?, price=?, quantity=?, restaurant_id=? 
       WHERE id = ?
     `;
-        const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await database.query(updateQuery, [
-      name, restaurant_name, url+image, rating, delivery_type, time, description,
+      name, restaurant_name, image, rating, delivery_type, time, description,
       sizes, ingredients, price, quantity, restaurant_id, id
     ]);
 
