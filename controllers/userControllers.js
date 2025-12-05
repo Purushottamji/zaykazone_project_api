@@ -101,12 +101,14 @@ const patchUser = async (req, res) => {
             }
         }
 
+        const url="https://zaykazone-project-api.onrender.com/uploads/user_pic/";
+
         const updatedData = {
             id,
             name: name ?? existingUser.name,
             email: email ?? existingUser.email,
             mobile: mobile ?? existingUser.mobile,
-            user_pic: req.file ? req.file.filename : existingUser.user_pic
+            user_pic: req.file ? url+req.file.filename : existingUser.user_pic
         };
 
         const result = await User.patchUser(updatedData);
