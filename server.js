@@ -7,7 +7,6 @@ const addressRoutes = require("./routes/addRoutes");
 const otpRoutes = require("./routes/otpRoutes");
 const phoneOtpRoutes = require("./routes/phoneOtp");
 const { upload } = require("./middleware/upload");
-
 const database = require("./db");
 const db = require("./db");
 dotenv.config();
@@ -18,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRoutes);
 app.use("/phone", phoneOtpRoutes);
 app.use("/users", userRoutes);
-app.use("/uploads", express.static("uploads"));
+//app.use("/uploads", express.static("uploads"));
 app.use("/address", addressRoutes);
 app.use("/otp", otpRoutes);
 
@@ -318,6 +317,58 @@ app.delete("/food/:id", async (req, res) => {
 
 
 
+app.get("/rating", async (req, res) => {
+  try {
+    const viewQuery = "SELECT * FROM restaurant_details";
+    const [rows] = await database.query(viewQuery);
+
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).json({
+      message: "database fetching error: " + error,
+    });
+  }
+});
+
+
+app.post("/add_data", async (req, res) => {
+  try {
+    const {
+      res_id,
+      product_name,
+      experience,
+      rating
+    } = req.body;
+
+    if (!res_id || !product_name || !experience || !rating) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const insertQuery = `
+      INSERT INTO product_rating 
+      (res_id, product_name, experience, rating)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    const [result] = await db.query(insertQuery, [
+      res_id, product_name, experience, rating
+    ]);
+
+    res.status(201).json({
+      message: "Rating added successfully",
+      data:result.insertId
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Database insert error: " + error });
+  }
+});
+
+
+app.post("/test", (req, res) => {
+  console.log(req.body);
+  res.json({ body: req.body });
+});
 
 
 const PORT = process.env.PORT || 3000;
