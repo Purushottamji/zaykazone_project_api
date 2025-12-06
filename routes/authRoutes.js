@@ -1,8 +1,7 @@
 const express = require("express");
 const {upload} = require("../middleware/upload");
-const { registerUser, loginUser } = require("../controllers/authControllers");
-
 const router = express.Router();
+const { registerUser, loginUser } = require("../controllers/authControllers");
 
 // register with image upload
 router.post("/register", upload.single("user_pic"), registerUser);
