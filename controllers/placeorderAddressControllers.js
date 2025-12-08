@@ -1,0 +1,43 @@
+const database =require("../db");
+
+const plasceorderAddressGet=async(req,res)=>{
+    try{
+        const viewQuery="SELECT * FROM placeorderaddress"
+        const [rows]=await database.query(viewQuery);
+        res.status(200).json(rows)
+    }
+    catch(error){
+        res.status(500).json({
+            massage:"database fatching error"+error
+        })
+        
+    }
+
+}
+const placeorderAddressAdd=async(req,res)=>{
+    try{
+        const {user_id,land_mark,state,pin_code,district,mobile_number}=req.body;
+
+        const insertQuery ="INSERT INTO placeorderaddress(user_id,land_mark,state,pin_code,district,mobile_number) VALUES(?,?,?,?,?,?)";
+        const [rows]=await database.query(insertQuery,[
+              user_id,
+      land_mark,
+      state,
+      pin_code,       
+      district,
+      mobile_number
+        ]);
+        res.status(200).json(rows)
+
+    }
+    catch(error){
+       return res.status(500).json({
+        massage:"database fatching error"+error
+
+        });
+
+    }
+
+}
+
+module.exports={plasceorderAddressGet,placeorderAddressAdd};

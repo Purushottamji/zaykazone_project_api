@@ -143,7 +143,7 @@ const addRestaurantFood = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Get existing food list
+   
     const [rows] = await database.query(
       "SELECT food_details FROM restaurant_details WHERE res_id = ?",
       [id]
