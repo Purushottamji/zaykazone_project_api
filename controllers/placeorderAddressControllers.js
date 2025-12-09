@@ -16,16 +16,19 @@ const plasceorderAddressGet=async(req,res)=>{
 }
 const placeorderAddressAdd=async(req,res)=>{
     try{
-        const {user_id,land_mark,state,pin_code,district,mobile_number}=req.body;
+        const {user_id,land_mark,state,pin_code,district,mobile_number,full_address}=req.body;
 
-        const insertQuery ="INSERT INTO placeorderaddress(user_id,land_mark,state,pin_code,district,mobile_number) VALUES(?,?,?,?,?,?)";
+        const insertQuery =`INSERT INTO placeorderaddress
+        (user_id,land_mark,state,pin_code,district,mobile_number,full_address)
+         VALUES(?,?,?,?,?,?,?)`;
         const [rows]=await database.query(insertQuery,[
               user_id,
       land_mark,
       state,
       pin_code,       
       district,
-      mobile_number
+      mobile_number,
+      full_address
         ]);
         res.status(200).json(rows)
 

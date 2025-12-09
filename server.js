@@ -77,6 +77,54 @@ app.post("/add_data", async (req, res) => {
 
 
 
+app.get("/rating", async (req, res) => {
+  try {
+    const viewQuery = "SELECT * FROM restaurant_details";
+    const [rows] = await database.query(viewQuery);
+
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).json({
+      message: "database fetching error: " + error,
+    });
+  }
+});
+
+
+app.post("/add_data", async (req, res) => {
+  try {
+    const {
+      res_id,
+      product_name,
+      experience,
+      rating
+    } = req.body;
+
+    if (!res_id || !product_name || !experience || !rating) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const insertQuery = `
+      INSERT INTO product_rating 
+      (res_id, product_name, experience, rating)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    const [result] = await db.query(insertQuery, [
+      res_id, product_name, experience, rating
+    ]);
+
+    res.status(201).json({
+      message: "Rating added successfully",
+      data:result.insertId
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Database insert error: " + error });
+  }
+});
+
+
 const PORT=process.env.PORT || 3000;
 app.listen(PORT,(err)=>{
     if(err) return console.error("server error :"+err.message);
