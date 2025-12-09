@@ -2,7 +2,7 @@ const database =require("../db");
 
 const plasceorderAddressGet=async(req,res)=>{
     try{
-        const viewQuery="SELECT * FROM placeorderaddress"
+        const viewQuery="SELECT * FROM placeorderAddress"
         const [rows]=await database.query(viewQuery);
         res.status(200).json(rows)
     }
@@ -18,7 +18,7 @@ const placeorderAddressAdd=async(req,res)=>{
     try{
         const {user_id,land_mark,state,pin_code,district,mobile_number,full_address}=req.body;
 
-        const insertQuery =`INSERT INTO placeorderaddress
+        const insertQuery =`INSERT INTO placeorderAddress
         (user_id,land_mark,state,pin_code,district,mobile_number,full_address)
          VALUES(?,?,?,?,?,?,?)`;
         const [rows]=await database.query(insertQuery,[
