@@ -7,10 +7,8 @@ const db = mysql.createPool({
     user: process.env.DB_USER ||"root",
     password:process.env.DB_PASS ||"",
     database:process.env.DB_NAME ||"zayakazone",
-    port: 3307
 });
 
-// ❗ Pool test (correct way)
 db.getConnection()
   .then((connection) => {
       console.log("👍 Database connected and pool ready.");
