@@ -11,6 +11,7 @@ const foodRoutes= require("./routes/foodRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const placeOrderRoutes=require("./routes/placeorderAddressRoutes");
+const ordersRoutes=require("./routes/orderRoutes");
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -27,7 +28,11 @@ app.use("/image_add", imageRoutes);
 app.use("/food", foodRoutes);
 app.use("/payment", paymentRoutes);
 app.use('/place',placeOrderRoutes);
+app.use('/order',ordersRoutes);
 const db=require("./db");
+
+
+
 app.get("/getTablesWithColumns", async (req, res) => {
   try {
     const [tables] = await db.query(`SHOW TABLES`);
