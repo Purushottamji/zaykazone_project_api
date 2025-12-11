@@ -68,6 +68,56 @@ app.get("/getTablesWithColumns", async (req, res) => {
   }
 });
 
+
+app.get("/rating/:user_id", async (req, res) => {
+    try {
+        const id = req.params.user_id;
+        const viewQuery = "SELECT * FROM product_rating WHERE user_id = ?";
+        const [rows] = await db.query(viewQuery, [id]);
+
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json({
+            message: "database fetching error: " + error,
+        });
+    }
+});
+
+app.post("/add_data", async (req, res) => {
+    try {
+        const {
+            user_id,
+            res_id,
+            product_name,
+            experience,
+            rating
+        } = req.body;
+
+        if (!res_id || !product_name || !experience || !rating) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const insertQuery = `
+      INSERT INTO product_rating 
+      (user_id,res_id, product_name, experience, rating)
+      VALUES (?, ?, ?, ?,?)
+    `;
+
+        const [result] = await db.query(insertQuery, [
+            user_id,
+            res_id, product_name, experience, rating
+        ]);
+
+        res.status(201).json({
+            message: "Rating added successfully",
+            data: result.insertId
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: "Database insert error: " + error });
+    }
+});
+
 app.get("/favourites/:id", (req, res) => {
     const id = req.params.id;  
 
@@ -121,55 +171,6 @@ app.delete("/favourite/:fevo_id", (req, res) => {
     );
 });
 
-
-app.get("/rating/:user_id", async (req, res) => {
-    try {
-        const id = req.params.user_id;
-        const viewQuery = "SELECT * FROM product_rating WHERE user_id = ?";
-        const [rows] = await db.query(viewQuery, [id]);
-
-        res.status(200).json(rows);
-    } catch (error) {
-        res.status(500).json({
-            message: "database fetching error: " + error,
-        });
-    }
-});
-
-app.post("/add_data", async (req, res) => {
-    try {
-        const {
-            user_id,
-            res_id,
-            product_name,
-            experience,
-            rating
-        } = req.body;
-
-        if (!res_id || !product_name || !experience || !rating) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-
-        const insertQuery = `
-      INSERT INTO product_rating 
-      (user_id,res_id, product_name, experience, rating)
-      VALUES (?, ?, ?, ?,?)
-    `;
-
-        const [result] = await db.query(insertQuery, [
-            user_id,
-            res_id, product_name, experience, rating
-        ]);
-
-        res.status(201).json({
-            message: "Rating added successfully",
-            data: result.insertId
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: "Database insert error: " + error });
-    }
-});
 
 
 const PORT = process.env.PORT || 3000;
