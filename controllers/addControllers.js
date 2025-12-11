@@ -3,7 +3,8 @@ const Address = require("../models/addModel");
 const createAddress= async(req, res) =>{
     try{
         const {user_id,label_as,full_address,street,pin_code,apartment_no,building_no}=req.body;
-        if(!user_id || !full_address) return res.status(400).json({message:"User ID and Full Address is required"});
+        if(!user_id || !full_address)
+             return res.status(400).json({message:"User ID and Full Address is required"});
         const {insertId}= await Address.createAddress({
             user_id, label_as, full_address, street, pin_code, apartment_no, building_no
         });
@@ -11,7 +12,7 @@ const createAddress= async(req, res) =>{
 
     }catch(err){
         console.error("Error adding address: ",err);
-        res.status(500).json({message:"Server error"});
+        res.status(500).json({message:"Server error"+err});
     }
 };
 
