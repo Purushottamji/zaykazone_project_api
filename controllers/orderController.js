@@ -1,7 +1,7 @@
 const db=require("../db");
 
 
-const getOrderByUserId= async (user_id) => {
+const getOrderByUserId= async (req,res) => {
     try{
       const {user_id} =req.params;
       const result=await OrderModel.getOrderByUserId(user_id);
