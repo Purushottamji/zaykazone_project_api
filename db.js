@@ -9,6 +9,7 @@ const db = mysql.createPool({
     database:process.env.DB_NAME ||"zaykazone",
 });
 
+
 db.getConnection()
   .then((connection) => {
       console.log("👍 Database connected and pool ready.");

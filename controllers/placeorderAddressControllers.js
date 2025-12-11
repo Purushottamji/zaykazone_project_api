@@ -44,4 +44,33 @@ const placeorderAddressAdd=async(req,res)=>{
 
 }
 
-module.exports={plasceorderAddressGet,placeorderAddressAdd};
+const placeorderAddressPatch = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const body = req.body;
+
+        const updateQuery = "UPDATE placeorderAddress SET ? WHERE id = ?";
+
+        const [result] = await database.query(updateQuery, [body, id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Address not found!" });
+        }
+
+        res.status(200).json({
+            message: "Updated successfully",
+            updated_data: body
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Database update error: " + error
+        });
+    }
+};
+
+
+
+
+
+module.exports={plasceorderAddressGet,placeorderAddressAdd,placeorderAddressPatch,};
