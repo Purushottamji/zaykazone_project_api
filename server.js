@@ -10,8 +10,6 @@ const imageRoutes = require("./routes/onlyImageRoutes");
 const foodRoutes = require("./routes/foodRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
-const favouritesRoutes = require("./routes/favouritesRoutes");
-
 const placeOrderRoutes=require("./routes/placeorderAddressRoutes");
 const ordersRoutes=require("./routes/orderRoutes");
 const favouritesRoutes = require("./routes/favouritesRoutes");
@@ -34,7 +32,6 @@ app.use("/payment", paymentRoutes);
 app.use("/favourites", favouritesRoutes);
 app.use('/place',placeOrderRoutes);
 app.use('/order',ordersRoutes);
-app.use("/favourites", favouritesRoutes);
 const db=require("./db");
 
 
@@ -144,61 +141,6 @@ app.delete("/delete_data/:id", async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error: " + error });
     }
-});
-
-
-
-app.get("/favourites/:id", (req, res) => {
-    const id = req.params.id;  
-
-    const sql = `
-        SELECT f.fevo_id, r.*
-        FROM favourites f
-        JOIN restaurant_details r ON f.res_id = r.res_id
-        WHERE f.id = ?
-    `;
-
-    db.query(sql, [id], (err, result) => {
-        if (err) {
-            return res.status(500).json(err);
-        }
-        res.json(result);
-    });
-});
-
-
-// ADD favourite
-app.post("/add-favourite", (req, res) => {
-    const { id, res_id } = req.body;
-
-
-    db.query("SELECT * FROM user_info WHERE id = ?", [id], (err, user) => {
-        if (err) return res.status(500).json(err);
-        if (!user.length) return res.status(400).json({ error: "User does not exist" });
-
-    
-        db.query("SELECT * FROM restaurant_details WHERE res_id = ?", [res_id], (err, rest) => {
-            if (err) return res.status(500).json(err);
-            if (!rest.length) return res.status(400).json({ error: "Restaurant does not exist" });
-
-        
-            const sql = "INSERT INTO favourites (id, res_id) VALUES (?, ?)";
-            db.query(sql, [id, res_id], (err, result) => {
-                if (err) return res.status(500).json(err);
-                res.json({ message: "Added to favourites", favourite_id: result.insertId });
-            });
-        });
-    });
-});
-
-
-// DELETE favourite
-app.delete("/favourite/:fevo_id", (req, res) => {
-    const fevo_id = req.params.fevo_id;
-    const sql = "DELETE FROM favourites WHERE fevo_id = ?";
-    db.query(sql, [fevo_id], (err) =>
-        err ? res.status(500).json(err) : res.json({ message: "Removed from favourites" })
-    );
 });
 
 
