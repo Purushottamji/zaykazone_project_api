@@ -7,6 +7,7 @@ const getOrderByUserId= async (user_id) => {
     return row;
 }
 
+
 const addOrderDetails = async ({
   res_id,
   food_name,
@@ -50,13 +51,13 @@ const addOrderDetails = async ({
 
       p.full_address,
       p.district,
-      p.pincode
+      p.pin_code
 
     FROM orders o
     JOIN user_info u ON o.user_id = u.id
     JOIN restaurant_details r ON o.res_id = r.res_id
     JOIN placeorderAddress p ON o.p_o_a_id = p.id
-    WHERE o.id = ?
+    WHERE o.order_id = ?
   `;
 
   const [rows] = await db.execute(joinSql, [orderId]);
