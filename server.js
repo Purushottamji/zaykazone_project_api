@@ -12,6 +12,7 @@ const restaurantRoutes = require("./routes/restaurantRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const placeOrderRoutes=require("./routes/placeorderAddressRoutes");
 const ordersRoutes=require("./routes/orderRoutes");
+const favouritesRoutes = require("./routes/favouritesRoutes");
 dotenv.config();
 const app = express();
 app.use(express.json());
