@@ -30,6 +30,7 @@ app.use("/food", foodRoutes);
 app.use("/payment", paymentRoutes);
 app.use('/place',placeOrderRoutes);
 app.use('/order',ordersRoutes);
+app.use("/favourites", favouritesRoutes);
 const db=require("./db");
 
 
