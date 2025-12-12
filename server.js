@@ -1,6 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const path = require("path");
+
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const addressRoutes = require("./routes/addRoutes");
@@ -10,11 +10,14 @@ const imageRoutes = require("./routes/onlyImageRoutes");
 const foodRoutes = require("./routes/foodRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const favouritesRoutes = require("./routes/favouritesRoutes");
+
 const placeOrderRoutes=require("./routes/placeorderAddressRoutes");
 const ordersRoutes=require("./routes/orderRoutes");
 const favouritesRoutes = require("./routes/favouritesRoutes");
 dotenv.config();
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,6 +31,7 @@ app.use("/restaurant", restaurantRoutes);
 app.use("/image_add", imageRoutes);
 app.use("/food", foodRoutes);
 app.use("/payment", paymentRoutes);
+app.use("/favourites", favouritesRoutes);
 app.use('/place',placeOrderRoutes);
 app.use('/order',ordersRoutes);
 app.use("/favourites", favouritesRoutes);
@@ -69,13 +73,6 @@ app.get("/getTablesWithColumns", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-app.use(express.urlencoded({ extended: true }));
-
-
- 
-
-
 
 
 
