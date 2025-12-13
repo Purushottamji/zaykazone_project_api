@@ -43,7 +43,7 @@ const sendOtp=async (req,res)=>{
 const updateUser = async (req, res) => {
   try {
     const { id } = req.user; // from JWT middleware
-    const { name, email } = req.body;
+    const { name, email ,bio} = req.body;
 
     let user_pic = null;
 
@@ -57,7 +57,7 @@ const updateUser = async (req, res) => {
       WHERE id = ?
     `;
 
-    await db.execute(sql, [name, email, user_pic, id]);
+    await db.execute(sql, [name, email, bio ,user_pic, id]);
 
     const [rows] = await db.execute(
       "SELECT id, name, email, mobile,user_bio, user_pic FROM user_info WHERE id = ?",

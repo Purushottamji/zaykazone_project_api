@@ -18,7 +18,7 @@ const updateUser = async (req, res) => {
     try {
 
         const id = req.params.id;
-        const { name, email, mobile, password } = req.body;
+        const { name, email, mobile, bio} = req.body;
 
         const existingUser = await User.findUserById(id);
         if (!existingUser)
@@ -38,23 +38,15 @@ const updateUser = async (req, res) => {
             }
         }
 
-       
-        let hashedPassword = existingUser.password;
-        if (password) {
-            hashedPassword = await bcrypt.hash(password, 10);
-        }
-
-       
         let user_pic = existingUser.user_pic;
         if (req.file) user_pic = req.file.filename;
 
-        
         const updatedData = {
             id,
             name: name || existingUser.name,
             email: email || existingUser.email,
             mobile: mobile || existingUser.mobile,
-            password: hashedPassword,
+            user_bio: bio || existingUser.user_bio,
             user_pic
         };
 
@@ -78,7 +70,7 @@ const updateUser = async (req, res) => {
 const patchUser = async (req, res) => {
     try {
         const id = req.params.id;
-        const { name, email, mobile } = req.body;
+        const { name, email, mobile,bio } = req.body;
 
         const existingUser = await User.findUserById(id);
         if (!existingUser)
@@ -98,14 +90,13 @@ const patchUser = async (req, res) => {
             }
         }
 
-        const url="https://zaykazone-project-api.onrender.com/uploads/user_pic/";
-
         const updatedData = {
             id,
             name: name ?? existingUser.name,
             email: email ?? existingUser.email,
             mobile: mobile ?? existingUser.mobile,
-            user_pic: req.file ? url+req.file.filename : existingUser.user_pic
+            user_bio: bio || existingUser.user_bio,
+            user_pic: req.file ? req.file.filename : existingUser.user_pic
         };
 
         const result = await User.patchUser(updatedData);
