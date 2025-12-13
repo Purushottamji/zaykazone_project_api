@@ -4,8 +4,8 @@
         // GET favourites
         async getFavourites(req, res) {
             try {
-                const { fev_id } = req.params;
-                const [rows] = await Favourites.getFavouritesByUser(fev_id);
+                const { user_id } = req.params;
+                const [rows] = await Favourites.getFavouritesByUser(user_id);
                 res.json(rows);
             } catch (err) {
                 console.error(err);
@@ -16,15 +16,15 @@
         // ADD favourite
         async addFavourite(req, res) {
             try {
-                const { fev_id, res_id } = req.body;
+                const { user_id, res_id } = req.body;
 
-                const [user] = await Favourites.checkUser(fev_id);
+                const [user] = await Favourites.checkUser(user_id);
                 if (!user.length) return res.status(400).json({ error: "User does not exist" });
 
                 const [restaurant] = await Favourites.checkRestaurant(res_id);
                 if (!restaurant.length) return res.status(400).json({ error: "Restaurant does not exist" });
 
-                const [result] = await Favourites.addFavourite(fev_id, res_id);
+                const [result] = await Favourites.addFavourite(user_id, res_id);
                 res.json({ message: "Added to favourites", favourite_id: result.insertId });
             } catch (err) {
                 console.error(err);
