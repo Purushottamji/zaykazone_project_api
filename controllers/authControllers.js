@@ -59,7 +59,6 @@ const loginUser = async (req, res) => {
     const accessToken = UserToken.createAccessToken({ id: user.id, email: user.email });
     const refreshToken = UserToken.createRefreshToken();
 
-    // store refresh token in DB
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
     await db.execute(
       "INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES (?, ?, ?)",

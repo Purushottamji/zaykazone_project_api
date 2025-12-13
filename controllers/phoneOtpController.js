@@ -1,5 +1,8 @@
 const twilio = require("twilio");
+const User = require("../models/userModel"); 
 const jwt = require("jsonwebtoken");
+const UserToken = require("../models/token");
+const db = require("../db");   
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -9,6 +12,7 @@ const client = twilio(
 );
 
 let otpStore = {};
+const otpChangeStore = {}; 
 
 const sendOtp = async (req, res) => {
   const { phone } = req.body;
@@ -65,12 +69,33 @@ const verifyOtp = async (req, res) => {
 
   delete otpStore[phone];
 
-  const token = jwt.sign({ phone }, process.env.JWT_SECRET, { expiresIn: "7d" });
+      let user = await User.findUserByMobile(phone);
+      if (!user) {
+        const { insertId } = await User.createUser({
+          name: null,
+          email: null,
+          password: null,
+          mobile: phone,
+          user_pic: null
+        });
+        user = await User.findUserById(insertId);
+      }
+
+      const payload = { id: user.id, mobile: user.mobile };
+      const accessToken = UserToken.createAccessToken(payload);
+      const refreshToken = UserToken.createRefreshToken();
+
+    const expiresAt = new Date(Date.now() + 30*24*60*60*1000); // 30 days
+    await db.execute(
+      "INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES (?, ?, ?)",
+      [user.id, refreshToken, expiresAt]
+    );
 
   return res.json({
     message: "Login Successful",
-    token,
-    user: { phone }
+    token: accessToken,
+    refreshToken,
+    user
   });
 };
 
