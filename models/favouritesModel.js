@@ -2,7 +2,6 @@ const db = require("../db");
 
 module.exports = {
 
-  // GET favourites by USER
   getFavouritesByUser(userId) {
     const sql = `
       SELECT 
