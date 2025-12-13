@@ -67,10 +67,24 @@ const placeorderAddressPatch = async (req, res) => {
             message: "Database update error: " + error
         });
     }
-};
+}
+
+const placeorderAddreddDelete = async(req,res)=>{
+     try{
+        const id=req.params.id;
+        const deleteQuery="DELETE FROM placeorderAddress WHERE id=?"
+        const [rows]=await database.query(deleteQuery,[id]);
+        res.status(200).json({message:"Deleted successfully"});
+
+     }
+     catch(error){
+        res.status(500).json({
+            message:"Database deleting error:"+error
+        });
+
+     }
+     
+}
 
 
-
-
-
-module.exports={plasceorderAddressGet,placeorderAddressAdd,placeorderAddressPatch,};
+module.exports={plasceorderAddressGet,placeorderAddressAdd,placeorderAddressPatch,placeorderAddreddDelete};
