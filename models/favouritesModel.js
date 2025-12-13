@@ -2,6 +2,7 @@ const db = require("../db");
 
 module.exports = {
 
+  // GET favourites by USER
   getFavouritesByUser(userId) {
     const sql = `
       SELECT 
@@ -43,13 +44,6 @@ module.exports = {
     return db.query(
       "INSERT INTO favorites (user_id, res_id) VALUES (?, ?)",
       [userId, resId]
-    );
-  },
-
-  getFavouriteById(favId) {
-    return db.query(
-      "SELECT * FROM favorites WHERE fav_id = ?",
-      [favId]
     );
   },
 
