@@ -1,42 +1,42 @@
-const database =require("../db");
+const database = require("../db");
 
-const plasceorderAddressGet=async(req,res)=>{
-    try{
-        const id =req.params.user_id;
-        const viewQuery="SELECT * FROM placeorderAddress WHERE user_id=?"
-        const [rows]=await database.query(viewQuery,[id]);
+const plasceorderAddressGet = async (req, res) => {
+    try {
+        const id = req.params.user_id;
+        const viewQuery = "SELECT * FROM placeorderAddress WHERE user_id=?"
+        const [rows] = await database.query(viewQuery, [id]);
         res.status(200).json(rows)
     }
-    catch(error){
+    catch (error) {
         res.status(500).json({
-            massage:"database fatching error"+error
+            massage: "database fatching error" + error
         })
-        
+
     }
 
 }
-const placeorderAddressAdd=async(req,res)=>{
-    try{
-        const {user_id,land_mark,state,pin_code,district,mobile_number,full_address}=req.body;
+const placeorderAddressAdd = async (req, res) => {
+    try {
+        const { user_id, land_mark, state, pin_code, district, mobile_number, full_address } = req.body;
 
-        const insertQuery =`INSERT INTO placeorderAddress
+        const insertQuery = `INSERT INTO placeorderAddress
         (user_id,land_mark,state,pin_code,district,mobile_number,full_address)
          VALUES(?,?,?,?,?,?,?)`;
-        const [rows]=await database.query(insertQuery,[
-              user_id,
-      land_mark,
-      state,
-      pin_code,       
-      district,
-      mobile_number,
-      full_address
+        const [rows] = await database.query(insertQuery, [
+            user_id,
+            land_mark,
+            state,
+            pin_code,
+            district,
+            mobile_number,
+            full_address
         ]);
         res.status(200).json(rows)
 
     }
-    catch(error){
-       return res.status(500).json({
-        massage:"database fatching error"+error
+    catch (error) {
+        return res.status(500).json({
+            massage: "database fatching error" + error
 
         });
 
@@ -69,22 +69,26 @@ const placeorderAddressPatch = async (req, res) => {
     }
 }
 
-const placeorderAddreddDelete = async(req,res)=>{
-     try{
-        const id=req.params.id;
-        const deleteQuery="DELETE FROM placeorderAddress WHERE id=?"
-        const [rows]=await database.query(deleteQuery,[id]);
-        res.status(200).json({message:"Deleted successfully"});
+const placeorderAddreddDelete = async (req, res) => {
+    try {
+        const id = req.params.id;
+        await database.query(
+            "DELETE FROM orders WHERE p_o_a_id = ?",
+            [id]
+        );
+        const deleteQuery = "DELETE FROM placeorderAddress WHERE id=?"
+        const [rows] = await database.query(deleteQuery, [id]);
+        res.status(200).json({ message: "Deleted successfully" });
 
-     }
-     catch(error){
+    }
+    catch (error) {
         res.status(500).json({
-            message:"Database deleting error:"+error
+            message: "Database deleting error:" + error
         });
 
-     }
-     
+    }
+
 }
 
 
-module.exports={plasceorderAddressGet,placeorderAddressAdd,placeorderAddressPatch,placeorderAddreddDelete};
+module.exports = { plasceorderAddressGet, placeorderAddressAdd, placeorderAddressPatch, placeorderAddreddDelete };

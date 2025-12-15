@@ -2,8 +2,7 @@ const db = require("../db");
 
 const createUser = async ({ name, email, mobile, password, user_pic }) => {
     const sql = `INSERT INTO user_info(name, email, mobile, password, user_pic) VALUES (?, ?, ?, ?, ?)`;
-    const url="https://zaykazone-project-api.onrender.com/uploads/user_pic/";
-    const [result] = await db.execute(sql, [name, email, mobile, password, url+user_pic]);
+    const [result] = await db.execute(sql, [name, email, mobile, password, user_pic]);
     return { insertId: result.insertId };
 }
 
