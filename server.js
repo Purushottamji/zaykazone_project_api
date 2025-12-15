@@ -32,6 +32,10 @@ app.use("/payment", paymentRoutes);
 app.use("/favourites", favouritesRoutes);
 app.use('/place',placeOrderRoutes);
 app.use('/order',ordersRoutes);
+
+
+
+
 const db=require("./db");
 
 
@@ -70,7 +74,6 @@ app.get("/getTablesWithColumns", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 
 app.get("/rating/:user_id", async (req, res) => {
@@ -142,8 +145,6 @@ app.delete("/delete_data/:id", async (req, res) => {
         res.status(500).json({ message: "Error: " + error });
     }
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
