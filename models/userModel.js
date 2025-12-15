@@ -2,7 +2,8 @@ const db = require("../db");
 
 const createUser = async ({ name, email, mobile, password, user_pic }) => {
     const sql = `INSERT INTO user_info(name, email, mobile, password, user_pic) VALUES (?, ?, ?, ?, ?)`;
-    const [result] = await db.execute(sql, [name, email, mobile, password, user_pic]);
+    const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
+    const [result] = await db.execute(sql, [name, email, mobile, password, url+user_pic]);
     return { insertId: result.insertId };
 }
 
@@ -12,12 +13,14 @@ const updateUser = async ({ id, name, email, mobile, password, user_pic }) => {
         SET name = ?, email = ?, mobile = ?, password = ?, user_pic = ?
         WHERE id = ?
     `;
+
+    const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await db.execute(sql, [
         name,
         email,
         mobile,
         password,
-        user_pic,
+        url+user_pic,
         id
     ]);
 
@@ -30,10 +33,9 @@ const patchUser= async (data) => {
     const mobile = data.mobile ?? null;
     const user_pic = data.user_pic ?? null;
 
-    const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await db.execute(
         `UPDATE user_info SET name=?, email=?, mobile=?, user_pic=COALESCE(?, user_pic) WHERE id=?`,
-        [name, email, mobile, url+user_pic, data.id]
+        [name, email, mobile, user_pic, data.id]
     );
 
     return result.affectedRows > 0;
