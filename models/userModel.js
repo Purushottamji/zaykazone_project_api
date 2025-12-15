@@ -30,9 +30,10 @@ const patchUser= async (data) => {
     const mobile = data.mobile ?? null;
     const user_pic = data.user_pic ?? null;
 
+    const url = "https://zaykazone-project-api.onrender.com/uploads/user_pic/";
     const [result] = await db.execute(
         `UPDATE user_info SET name=?, email=?, mobile=?, user_pic=COALESCE(?, user_pic) WHERE id=?`,
-        [name, email, mobile, user_pic, data.id]
+        [name, email, mobile, url+user_pic, data.id]
     );
 
     return result.affectedRows > 0;
