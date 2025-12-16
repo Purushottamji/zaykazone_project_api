@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", getAllUsers);
 router.put("/update/:id", upload.single("user_pic"), updateUser);
-router.post("/patch/:id", upload.single("user_pic"), patchUser);
+router.patch("/patch/:id", upload.single("user_pic"), patchUser);
 router.delete("/delete/:id", authMiddleware,deleteUser);
 
 

@@ -70,7 +70,7 @@ const updateUser = async (req, res) => {
 const patchUser = async (req, res) => {
     try {
         const id = req.params.id;
-        const { name, email, mobile,bio } = req.body;
+        const { name, email, mobile, bio } = req.body;
 
         const existingUser = await User.findUserById(id);
         if (!existingUser)
