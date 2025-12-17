@@ -18,7 +18,8 @@ const addOrderDetails = async ({
 }) => {
 
   const insertSql = `
-    INSERT INTO orders(user_id, res_id, food_name, quantity, total_price, p_o_a_id)
+    INSERT INTO orders
+    (user_id, res_id, food_name, quantity, total_price, p_o_a_id)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
 
@@ -35,7 +36,7 @@ const addOrderDetails = async ({
 
   const joinSql = `
     SELECT 
-      o.order_id AS order_id,
+      o.order_id,
       o.food_name,
       o.quantity,
       o.total_price,
@@ -64,5 +65,6 @@ const addOrderDetails = async ({
 
   return rows[0];
 };
+
 
 module.exports={getOrderByUserId, addOrderDetails};

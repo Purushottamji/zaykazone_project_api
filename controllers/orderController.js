@@ -15,9 +15,35 @@ const getOrderByUserId= async (req,res) => {
 
 const addOrderDetails = async (req, res) => {
   try {
-    const orderData = req.body;
+    const {
+      user_id,
+      res_id,
+      food_name,
+      quantity,
+      total_price,
+      p_o_a_id
+    } = req.body;
 
-    const order = await OrderModel.addOrderDetails(orderData);
+    if (
+      !user_id ||
+      !res_id ||
+      !food_name ||
+      !quantity ||
+      !total_price ||
+      !p_o_a_id
+    ) {
+      return res.status(400).json({
+        message: "All fields are required"
+      });
+    }
+
+    if (quantity <= 0 || total_price <= 0) {
+      return res.status(400).json({
+        message: "Invalid quantity or price"
+      });
+    }
+
+    const order = await OrderModel.addOrderDetails(req.body);
 
     res.status(201).json({
       message: "Order placed successfully",
@@ -29,6 +55,7 @@ const addOrderDetails = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 
 module.exports={getOrderByUserId, addOrderDetails};
