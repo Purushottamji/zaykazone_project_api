@@ -3,20 +3,30 @@ const db = require("../db");
 module.exports = {
 
   getFavouritesByUser(userId) {
-    const sql = `
-      SELECT 
-        f.fav_id AS favourite_id,
-        r.res_id,
-        r.name,
-        r.address,
-        r.image_url,
-        r.rating
-      FROM favorites f
-      JOIN restaurant_details r ON f.res_id = r.res_id
-      WHERE f.user_id = ?
-    `;
-    return db.query(sql, [userId]);
-  },
+  const sql = `
+    SELECT 
+      f.fav_id AS favourite_id,
+      fd.id AS food_id,
+      fd.name AS food_name,
+      fd.image AS food_image,
+      fd.rating AS food_rating,
+      fd.price,
+      r.res_id,
+      r.name AS restaurant_name,
+      r.address,
+      r.image_url AS restaurant_image,
+      r.rating AS restaurant_rating
+
+    FROM favorites f
+    JOIN food_details fd 
+      ON f.food_id = fd.id
+    JOIN restaurant_details r 
+      ON fd.restaurant_id = r.res_id
+
+    WHERE f.user_id = ?
+  `;
+  return db.query(sql, [userId]);
+},
 
   checkUser(userId) {
     return db.query(
