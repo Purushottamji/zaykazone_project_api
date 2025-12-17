@@ -39,10 +39,10 @@ module.exports = {
     );
   },
 
-  addFavourite(userId, resId) {
+  addFavourite(userId, resId, foodId) {
     return db.query(
-      "INSERT INTO favorites (user_id, res_id) VALUES (?, ?)",
-      [userId, resId]
+      "INSERT INTO favorites (user_id, res_id, food_id) VALUES (?, ?, ?)",
+      [userId, resId, foodId]
     );
   },
 
