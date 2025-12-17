@@ -4,25 +4,21 @@ module.exports = {
 
   getFavouritesByUser(userId) {
   const sql = `
-    SELECT 
+      SELECT 
       f.fav_id AS favourite_id,
       fd.id AS food_id,
+      fd.image,
+      fd.reting,
       fd.name AS food_name,
-      fd.image AS food_image,
-      fd.rating AS food_rating,
       fd.price,
       r.res_id,
       r.name AS restaurant_name,
       r.address,
       r.image_url AS restaurant_image,
       r.rating AS restaurant_rating
-
-    FROM favorites f
-    JOIN food_details fd 
-      ON f.food_id = fd.id
-    JOIN restaurant_details r 
-      ON fd.restaurant_id = r.res_id
-
+    FROM favourites f
+    LEFT JOIN food_details fd ON f.food_id = fd.id
+    LEFT JOIN restaurant_details r ON fd.restaurant_id = r.res_id
     WHERE f.user_id = ?
   `;
   return db.query(sql, [userId]);
