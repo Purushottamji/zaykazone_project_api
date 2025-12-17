@@ -12,7 +12,17 @@ const getFood=async (req, res) => {
   }
 };
 
-
+const getFoodById= async (req,res) =>{
+  try{
+    const {res_id} =req.params;
+    const sql= `SELECT * FROM food_details WHERE restaurant_id = ?`;
+    const [rows] = await db.query(sql,[res_id]);
+    res.status(200).json({ message: rows });
+  }catch(err){
+    console.log("Food geting by id error:",err);
+    res.status(500).json({message:"Server Error"});
+  }
+}
 const postFoodDetails=async (req, res) => {
   try {
     const {
@@ -125,4 +135,4 @@ const deleteFoodDetails= async (req, res) => {
   }
 };
 
-module.exports={getFood, postFoodDetails, putFoodDetails, patchFoodDetails, deleteFoodDetails};
+module.exports={getFood, postFoodDetails, putFoodDetails, patchFoodDetails, deleteFoodDetails, getFoodById};

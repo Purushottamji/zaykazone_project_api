@@ -13,6 +13,8 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const placeOrderRoutes=require("./routes/placeorderAddressRoutes");
 const ordersRoutes=require("./routes/orderRoutes");
 const favouritesRoutes = require("./routes/favouritesRoutes");
+const foodSizeRoutes = require("./routes/foodSizeRoutes");
+const foodIngredientsRoutes = require("./routes/foodIngredientsRoutes");
 dotenv.config();
 const app = express();
 
@@ -32,7 +34,8 @@ app.use("/payment", paymentRoutes);
 app.use("/favourites", favouritesRoutes);
 app.use('/place',placeOrderRoutes);
 app.use('/order',ordersRoutes);
-
+app.use('/foodSize',foodSizeRoutes);
+app.use('/foodIngredients',foodIngredientsRoutes);
 
 
 
