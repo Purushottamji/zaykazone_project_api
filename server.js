@@ -34,7 +34,6 @@ app.use("/food", foodRoutes);
 app.use("/payment", paymentRoutes);
 app.use('/order',ordersRoutes);
 app.use('/orderhistory',orderhistoryRoutes);
-app.use("/orderhistoryAdd",orderhistoryRoutes);
 app.use("/favourites", favouritesRoutes);
 app.use('/place',placeOrderRoutes);
 app.use('/order',ordersRoutes);
