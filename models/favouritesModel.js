@@ -3,20 +3,26 @@ const db = require("../db");
 module.exports = {
 
   getFavouritesByUser(userId) {
-    const sql = `
+  const sql = `
       SELECT 
-        f.fav_id AS favourite_id,
-        r.res_id,
-        r.name,
-        r.address,
-        r.image_url,
-        r.rating
-      FROM favorites f
-      JOIN restaurant_details r ON f.res_id = r.res_id
-      WHERE f.user_id = ?
-    `;
-    return db.query(sql, [userId]);
-  },
+      f.fav_id AS favourite_id,
+      fd.id AS food_id,
+      fd.image,
+      fd.rating,
+      fd.name AS food_name,
+      fd.price,
+      r.res_id,
+      r.name AS restaurant_name,
+      r.address,
+      r.image_url AS restaurant_image,
+      r.rating AS restaurant_rating
+    FROM favorites f
+    LEFT JOIN food_details fd ON f.food_id = fd.id
+    LEFT JOIN restaurant_details r ON fd.restaurant_id = r.res_id
+    WHERE f.user_id = ?
+  `;
+  return db.query(sql, [userId]);
+},
 
   checkUser(userId) {
     return db.query(
@@ -39,10 +45,10 @@ module.exports = {
     );
   },
 
-  addFavourite(userId, resId) {
+  addFavourite(userId, resId, foodId) {
     return db.query(
-      "INSERT INTO favorites (user_id, res_id) VALUES (?, ?)",
-      [userId, resId]
+      "INSERT INTO favorites (user_id, res_id, food_id) VALUES (?, ?, ?)",
+      [userId, resId, foodId]
     );
   },
 
