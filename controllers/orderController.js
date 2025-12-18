@@ -20,6 +20,7 @@ const addOrderDetails = async (req, res) => {
       res_id,
       food_name,
       quantity,
+      image,
       total_price,
       p_o_a_id
     } = req.body;
@@ -29,6 +30,7 @@ const addOrderDetails = async (req, res) => {
       !res_id ||
       !food_name ||
       !quantity ||
+      !image,
       !total_price ||
       !p_o_a_id
     ) {

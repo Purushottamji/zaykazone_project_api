@@ -13,13 +13,14 @@ const addOrderDetails = async ({
   food_name,
   quantity,
   total_price,
+  image,
   user_id,
   p_o_a_id
 }) => {
 
   const insertSql = `
     INSERT INTO orders
-    (user_id, res_id, food_name, quantity, total_price, p_o_a_id)
+    (user_id, res_id, food_name, image, quantity, total_price, p_o_a_id)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
 
@@ -28,6 +29,7 @@ const addOrderDetails = async ({
     res_id,
     food_name,
     quantity,
+    image,
     total_price,
     p_o_a_id
   ]);
