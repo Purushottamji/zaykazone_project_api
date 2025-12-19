@@ -3,7 +3,7 @@ const db=require("../db");
 const getPaymentByUserId=async (req, res) => {
   try {
     const viewQuery = "SELECT * FROM payment WHERE user_id = ?";
-    const [rows] = await database.query(viewQuery); 
+    const [rows] = await db.query(viewQuery); 
     res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({ message: "server error: " + error });
@@ -18,7 +18,7 @@ const addPaymentDetails=async (req, res) => {
 
     const values = [user_id, card_holder_name, card_number, exp_date, cvv];
 
-    const [result] = await database.query(insertQuery, values);
+    const [result] = await db.query(insertQuery, values);
 
     res.status(201).json({
     
