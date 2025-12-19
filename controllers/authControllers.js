@@ -114,7 +114,7 @@ const refreshToken = async (req, res) => {
     const user = urows[0];
     const newAccessToken = createAccessToken({ id: user.id, mobile: user.mobile });
 
-    return res.json({ token: newAccessToken });
+    return res.json({ token: newAccessToken ,expiresIn : 7200});
 
   } catch (err) {
     console.error("Refresh error:", err);

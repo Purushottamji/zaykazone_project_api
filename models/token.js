@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const db = require("../db"); 
 
 const createAccessToken = (payload) =>
-  jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });
+  jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "2h" });
 
 const createRefreshToken = () =>
   crypto.randomBytes(48).toString("hex");
