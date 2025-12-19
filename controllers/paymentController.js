@@ -21,8 +21,7 @@ const addPaymentDetails=async (req, res) => {
     const [result] = await db.query(insertQuery, values);
 
     res.status(201).json({
-    
-    user_id,card_holder_name,card_number,exp_date,cvv
+      result
     });
 
   } catch (error) {
