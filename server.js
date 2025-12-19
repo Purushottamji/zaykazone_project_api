@@ -16,8 +16,7 @@ const orderhistoryRoutes=require("./routes/orderhistoryRoutes");
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.urlencoded({ extended: true }))
 app.use("/auth", authRoutes);
 app.use("/phone", phoneOtpRoutes);
 app.use("/users", userRoutes);
@@ -32,8 +31,6 @@ app.use('/plae',placeOrderRoutes);
 app.use('/order',ordersRoutes);
 app.use('/orderhistory',orderhistoryRoutes);
 app.use("/orderhistoryAdd",orderhistoryRoutes);
-
-
 
 
 // const db=require("./db");
@@ -183,10 +180,6 @@ app.use("/orderhistoryAdd",orderhistoryRoutes);
 //         err ? res.status(500).json(err) : res.json({ message: "Removed from favourites" })
 //     );
 // });
-
-
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
