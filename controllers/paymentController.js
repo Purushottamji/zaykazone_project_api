@@ -37,9 +37,9 @@ const addPaymentDetails = async (req, res) => {
 
 const deletePaymentDetails = async (req, res) => {
   try {
-    const { payment_id } = req.params;
+    const { id } = req.params;
     const deleteQuery = "DELETE FROM payment WHERE id = ?";
-    const [result] = await database.query(deleteQuery, [payment_id]);
+    const [result] = await database.query(deleteQuery, [id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Payment record not found" });
