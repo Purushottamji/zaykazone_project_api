@@ -115,7 +115,7 @@ app.post("/add_data/:user_id", async (req, res) => {
         const insertQuery = `
             INSERT INTO product_rating 
             (user_id, res_id, product_name, experience, rating,user_name)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
         `;
 
         const [result] = await db.query(insertQuery, [
